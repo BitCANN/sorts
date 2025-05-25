@@ -44,21 +44,21 @@ The standard reserves the following keys for internal use:
   ```
 
 - Examples:
-  ```js
+  ```
   // Unordered array
   bio.email=a@example.com
   bio.email=b@example.com
   bio.email.meta=type:array
   ```
 
-  ```js
+  ```
   // Ordered array
   bio.email.0=a@example.com
   bio.email.1=b@example.com
   bio.email.meta=type:array
   ```
 
-  ```js
+  ```
   // Ordered text
   profile.bio.0=This is the beginning ...
   profile.bio.1=... continued text ...
