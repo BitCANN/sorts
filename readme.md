@@ -5,9 +5,9 @@
     Layer: Applications
     Maintainer: Kuldeep Singh
     Status: Draft
-    Initial Publication Date: 2025-05-23
-    Latest Revision Date: 2025-05-23
-    Version: 1.0.0-draft
+    Initial Publication Date: 2025-05-25
+    Latest Revision Date: 2025-05-26
+    Version: 1.0.1
 
 ## Overview
 
@@ -28,7 +28,7 @@ The standard reserves the following keys for internal use:
 | Key         | Value                | Description |
 |-------------|-------------------------------|-------------|
 | revoked    | `<sha256-hash>`   | Used to signal revocation of a record. The value is always the SHA-256 hash of the full `key=value` string of the record being revoked. |
-| meta       | `type:<array\|text\|...>`            | Represents the behaviour of the record. Example: `meta=type:array`. For simple records, it can be omitted. |
+| meta       | `type:<array\|text\|object\|...>`            | Represents the behaviour of the record. Example: `meta=type:array`. For simple records, it can be omitted. |
 
 ## 3. Updating Records and Fragmentation
 
@@ -107,8 +107,10 @@ The standard reserves the following keys for internal use:
 |            | `notice`            | string/fragmented | A notice regarding this name                                                   |
 |            | `location`          | string            | Generic location (e.g. "Ladakh, India")                                                                   |
 |            | `url`               | string            | Website URL                                                                                                 |
-|            | `pgp`               | string/fragmented | PGP public key (ASCII-armored)                                                                              |
 |            | *                   | string/fragmented | **Many additional keys are recommended as per [schema.org Person](https://schema.org/Person) (e.g., `birthDate`, `jobTitle`, `alumniOf`, etc.); see schema.org for full list.** |
+| privacy    | `pgp`               | fragmented | PGP public key (ASCII-armored)                                                                              |
+|            | `rpa`               | string/fragmented | RPA (Resuable Personal Address)                                                                              |
+|            | *       | string/fragmented            | Any other privacy scheme                                                                              |
 | `crypto`   | `BCH.address`                        | string            | Bitcoincash address
 |  | `ETH.address`                        | string            | Ethereum address                                                                        |
 |            | `BTC.address`                        | string            | Bitcoin address                        |
@@ -118,12 +120,12 @@ The standard reserves the following keys for internal use:
 | `token`    | `<FAMILY>.address`                   | string            | Blockchain family address (e.g., EVM)                                                                        |
 |            | `<FAMILY>.<NETWORK>.address`         | string            | Blockchain network address (e.g., UTXO.BCH)                                                                   |
 |            | `<FAMILY>.<NETWORK>.<TOKEN>.address` | string            | Token-specific address (e.g., UTXO.BCH.USDT)                                                                |
-|            | *                                    | string            | **Token format inspired by [Unstoppable Domains Records Reference](https://docs.unstoppabledomains.com/resolution/records-reference/)** |
+|            | *                                    | string/fragmented            | **Token format inspired by [Unstoppable Domains Records Reference](https://docs.unstoppabledomains.com/resolution/records-reference/)** |
 | social     | `twitter`           | string            | Twitter handle; case-insensitive                                                                            |
 |            | `github`            | string            | GitHub username; letters, numbers, hyphens only                                                             |
 |            | `telegram`          | string            | Telegram username; letters, numbers, underscores                                                            |
 |            | `discord`           | string            | Discord username; must include #                                                                            |
-|            | *             | string            | Other social platform handles                                                                               |
+|            | *             | string/fragmented            | Other social platform handles                                                                               |
 | dns        | `a`                 | string/fragmented | IPv4 address in dotted decimal format (e.g., 192.0.2.1)                                                     |
 |            | `aaaa`              | string/fragmented | IPv6 address; lowercase recommended                                                                         |
 |            | `cname`             | string/fragmented | Canonical name record; may end with a dot                                                                   |
@@ -143,14 +145,15 @@ bio.name=Vikram Sarabhai
 bio.avatar=https://example.com/vikram.jpg
 bio.email=vikram@example.com
 bio.description.0=Founder of the Indian Space Research Organisation (ISRO).
-bio.description.1=Spearheaded India’s entry into the space age with the first satellite launch.
+bio.description.1=Spearheaded India's entry into the space age with the first satellite launch.
 bio.description.meta=type:text
+
+# Privacy
+privacy.pgp=-----BEGIN PGP PUBLIC KEY BLOCK-----
+privacy.rpa=example.rpa
 
 # Revocation of bio.description
 revoked=8a2e7f4c...  # sha256(bio.description.meta=type:text)
-
-# Revocation of bio.description.1
-revoked=8a2e7f4b...  # sha256(bio.description.1)
 
 # Social
 social.twitter=handle
@@ -168,12 +171,23 @@ dns.aaaa=2606:2800:220:1:248:1893:25c8:194
 # Contract
 contract.fingerprint=0x1234567890abcdef1234567890abcdef12345678
 contract.params=1465077837 4 -789332029 e4
+contract.meta=type:object
 ```
 
 ## References
 
 1. [Unstoppable Domains Records Reference](https://docs.unstoppabledomains.com/resolution/records-reference/) - Documentation for Unstoppable Domains' record types and formats
 2. [ENS Text Records](https://docs.ens.domains/web/records/) - Ethereum Name Service documentation for text records and metadata
+
+## Changelog
+
+- #### 1.0.1 - 2025-05-26
+  - Added `privacy` namespace
+  - Added `object` in meta type
+  - Added `string/fragmented` type to wildcard keys (`*`)
+- #### v1.0.0-draft – 2025-05-25 ([69066ab](https://github.com/BitCANN/sorts/commit/69066ab9d187efde26853b5a47dc6ebcd438ce91))
+  - Initial publication
+
 
 ## Copyright
 
